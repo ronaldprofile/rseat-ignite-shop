@@ -29,7 +29,7 @@ export default function Home({ products }: HomeProps) {
   });
 
   return (
-    <S.HomePageContainer ref={sliderRef} className="keen-slider">
+    <>
       <Head>
         <title>Ignite Shop | Home</title>
         <meta
@@ -38,24 +38,26 @@ export default function Home({ products }: HomeProps) {
         />
       </Head>
 
-      {products.map((product) => {
-        return (
-          <Link
-            href={`/product/${product.id}`}
-            key={product.id}
-            // prefetch={false}
-          >
-            <S.Product key={product.id} className="keen-slider__slide">
-              <Image src={product.imageUrl} alt="" width={520} height={400} />
-              <footer>
-                <strong>{product.name}</strong>
-                <span>{product.price}</span>
-              </footer>
-            </S.Product>
-          </Link>
-        );
-      })}
-    </S.HomePageContainer>
+      <S.HomePageContainer ref={sliderRef} className="keen-slider">
+        {products.map((product) => {
+          return (
+            <Link
+              href={`/product/${product.id}`}
+              key={product.id}
+              // prefetch={false}
+            >
+              <S.Product key={product.id} className="keen-slider__slide">
+                <Image src={product.imageUrl} alt="" width={520} height={400} />
+                <footer>
+                  <strong>{product.name}</strong>
+                  <span>{product.price}</span>
+                </footer>
+              </S.Product>
+            </Link>
+          );
+        })}
+      </S.HomePageContainer>
+    </>
   );
 }
 

@@ -1,13 +1,14 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import Image from "next/image";
 import { useRouter } from "next/router";
-import axios from "axios";
+import { useState } from "react";
+import Head from "next/head";
+import Image from "next/image";
 import { Stripe } from "stripe";
 import { stripe } from "../../lib/stripe";
 
 import { ProductSkeleton } from "../../components/ProductSkeleton";
+import axios from "axios";
 import * as S from "../../styles/pages/product";
-import { useState } from "react";
 
 interface Product {
   id: string;
@@ -50,22 +51,31 @@ export default function Product({ product }: ProductProps) {
   }
 
   return (
-    <S.ProductContainer>
-      <S.ImageContainer>
-        <Image src={product.imageUrl} alt="" width={520} height={400} />
-      </S.ImageContainer>
+    <>
+      <Head>
+        <title>Ignite Shop | {product.name}</title>
+      </Head>
 
-      <S.ProductDetails>
-        <h1>{product.name}</h1>
+      <S.ProductContainer>
+        <S.ImageContainer>
+          <Image src={product.imageUrl} alt="" width={520} height={400} />
+        </S.ImageContainer>
 
-        <span>{product.price}</span>
-        <p>{product.description}</p>
+        <S.ProductDetails>
+          <h1>{product.name}</h1>
 
-        <button onClick={handleBuyProduct} disabled={isCreatingCheckoutSession}>
-          Comprar agora
-        </button>
-      </S.ProductDetails>
-    </S.ProductContainer>
+          <span>{product.price}</span>
+          <p>{product.description}</p>
+
+          <button
+            onClick={handleBuyProduct}
+            disabled={isCreatingCheckoutSession}
+          >
+            Comprar agora
+          </button>
+        </S.ProductDetails>
+      </S.ProductContainer>
+    </>
   );
 }
 
