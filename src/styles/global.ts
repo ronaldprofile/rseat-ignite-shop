@@ -17,7 +17,15 @@ export const globalStyles = globalCss({
     fontWeight: 400,
   },
 
+  button: {
+    cursor: "pointer",
+  },
+
+  a: {
+    textDecoration: "none",
+  },
+
   // ".keen-slider__slide": {
-  //   minWidth: "520px !important"
+  //   minWidth: "480px !important"
   // }
 });
