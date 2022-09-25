@@ -1,4 +1,4 @@
-import { styled } from "../styles";
+import { styled } from "../../styles";
 
 export const ProductContainerSkeleton = styled("main", {
   maxWidth: 1180,

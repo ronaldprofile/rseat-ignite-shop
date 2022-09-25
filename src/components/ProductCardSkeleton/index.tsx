@@ -1,7 +1,7 @@
 import Skeleton from "react-loading-skeleton";
 import * as S from "./styles";
 
-export function ProductSkeleton() {
+export function ProductCardSkeleton() {
   return (
     <S.ProductContainerSkeleton>
       <Skeleton width={520} height={576} />
@@ -15,7 +15,7 @@ export function ProductSkeleton() {
         </div>
 
         <div className="buy-product">
-          <Skeleton className="button-buy"/>
+          <Skeleton className="button-buy" />
         </div>
       </S.ProductDetailsSkeleton>
     </S.ProductContainerSkeleton>

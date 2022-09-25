@@ -3,11 +3,12 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
-import { Stripe } from "stripe";
-import { stripe } from "../../lib/stripe";
-
-import { ProductSkeleton } from "../../components/ProductSkeleton";
 import axios from "axios";
+
+import { getProductByIdStripe } from "../../hooks/get-product-by-id";
+import { getAllProductsStripe } from "../../hooks/get-all-products";
+
+import { ProductCardSkeleton } from "../../components/ProductCardSkeleton";
 import * as S from "../../styles/pages/product";
 
 interface Product {
@@ -30,7 +31,7 @@ export default function Product({ product }: ProductProps) {
   const { isFallback } = useRouter();
 
   if (isFallback) {
-    return <ProductSkeleton />;
+    return <ProductCardSkeleton />;
   }
 
   async function handleBuyProduct() {
@@ -80,15 +81,13 @@ export default function Product({ product }: ProductProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [
-      {
-        params: { id: "prod_MOyu2gYmy3z30W" },
-      },
-    ],
+  const { products } = await getAllProductsStripe();
 
-    fallback: true,
-  };
+  const paths = products.map((product) => ({
+    params: { id: product.id },
+  }));
+
+  return { paths, fallback: true };
 };
 
 export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
@@ -96,28 +95,15 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
 }) => {
   const productId = params!.id;
 
-  const product = await stripe.products.retrieve(productId, {
-    expand: ["default_price"],
-  });
-
-  const price = product.default_price as Stripe.Price;
+  const { product } = await getProductByIdStripe(productId);
 
   await new Promise((resolve) => setTimeout(() => resolve(""), 3000));
 
   return {
     props: {
-      product: {
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        imageUrl: product.images[0],
-        defaultPriceId: price.id,
-        price: new Intl.NumberFormat("pt-br", {
-          style: "currency",
-          currency: "BRL",
-        }).format(price.unit_amount! / 100),
-      },
+      product,
     },
-    revalidate: 60 * 60 * 1, //1 hour
+
+    revalidate: 60 * 60 * 1, // 1 hour
   };
 };

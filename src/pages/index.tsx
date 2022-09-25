@@ -1,15 +1,13 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { useKeenSlider } from "keen-slider/react";
 import { GetStaticProps } from "next";
-import { stripe } from "../lib/stripe";
-import Stripe from "stripe";
 import { CaretLeft, CaretRight } from "phosphor-react";
-
+import { getAllProductsStripe } from "../hooks/get-all-products";
 import "keen-slider/keen-slider.min.css";
 import * as S from "../styles/pages/home";
-import { useState } from "react";
 
 interface HomeProps {
   products: Array<{
@@ -47,7 +45,7 @@ export default function Home({ products }: HomeProps) {
           perView: 1,
         },
 
-        drag: true
+        drag: true,
       },
     },
   });
@@ -122,23 +120,9 @@ export default function Home({ products }: HomeProps) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const response = await stripe.products.list({
-    expand: ["data.default_price"],
-  });
+  const { products } = await getAllProductsStripe();
 
-  const products = response.data.map((product) => {
-    const price = product.default_price as Stripe.Price;
-
-    return {
-      id: product.id,
-      name: product.name,
-      imageUrl: product.images[0],
-      price: new Intl.NumberFormat("pt-br", {
-        style: "currency",
-        currency: "BRL",
-      }).format(price.unit_amount! / 100),
-    };
-  });
+  await new Promise((resolve) => setTimeout(() => resolve(""), 3000));
 
   return {
     props: {
