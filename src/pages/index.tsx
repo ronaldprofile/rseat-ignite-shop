@@ -1,15 +1,15 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-
 import { useKeenSlider } from "keen-slider/react";
-
-import "keen-slider/keen-slider.min.css";
-
-import * as S from "../styles/pages/home";
 import { GetStaticProps } from "next";
 import { stripe } from "../lib/stripe";
 import Stripe from "stripe";
+import { CaretLeft, CaretRight } from "phosphor-react";
+
+import "keen-slider/keen-slider.min.css";
+import * as S from "../styles/pages/home";
+import { useState } from "react";
 
 interface HomeProps {
   products: Array<{
@@ -21,12 +21,44 @@ interface HomeProps {
 }
 
 export default function Home({ products }: HomeProps) {
-  const [sliderRef] = useKeenSlider({
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+
+  const [sliderRef, instanceRef] = useKeenSlider({
+    initial: 0,
+    dragSpeed: 0.8,
+    drag: false,
     slides: {
-      perView: 3,
+      perView: 2,
       spacing: 48,
     },
+
+    slideChanged(slider) {
+      setCurrentSlide(slider.track.details.rel);
+    },
+
+    created() {
+      setLoaded(true);
+    },
+
+    breakpoints: {
+      "(max-width: 425px)": {
+        slides: {
+          perView: 1,
+        },
+
+        drag: true
+      },
+    },
   });
+
+  function prevSlide() {
+    instanceRef.current?.prev();
+  }
+
+  function nextSlide() {
+    instanceRef.current?.next();
+  }
 
   return (
     <>
@@ -44,18 +76,46 @@ export default function Home({ products }: HomeProps) {
             <Link
               href={`/product/${product.id}`}
               key={product.id}
-              // prefetch={false}
+              prefetch={false}
             >
               <S.Product key={product.id} className="keen-slider__slide">
                 <Image src={product.imageUrl} alt="" width={520} height={400} />
+
                 <footer>
-                  <strong>{product.name}</strong>
-                  <span>{product.price}</span>
+                  <div>
+                    <strong>{product.name}</strong>
+                    <span>{product.price}</span>
+                  </div>
                 </footer>
               </S.Product>
             </Link>
           );
         })}
+
+        <S.Glass position="right-position">
+          <S.SlidesControl>
+            {loaded && instanceRef.current && (
+              <S.ButtonControl
+                onClick={nextSlide}
+                disabled={currentSlide === 2}
+              >
+                <CaretRight color="#c4c4cc" />
+              </S.ButtonControl>
+            )}
+          </S.SlidesControl>
+        </S.Glass>
+
+        {currentSlide !== 0 && (
+          <S.Glass position="left-position">
+            <S.SlidesControl>
+              {loaded && instanceRef.current && (
+                <S.ButtonControl onClick={prevSlide}>
+                  <CaretLeft color="#c4c4cc" />
+                </S.ButtonControl>
+              )}
+            </S.SlidesControl>
+          </S.Glass>
+        )}
       </S.HomePageContainer>
     </>
   );

@@ -26,6 +26,6 @@ export const globalStyles = globalCss({
   },
 
   // ".keen-slider__slide": {
-  //   minWidth: "480px !important"
+  //   minWidth: "696px !important"
   // }
 });

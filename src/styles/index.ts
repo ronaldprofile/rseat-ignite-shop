@@ -11,6 +11,10 @@ export const {
   theme,
 } = createStitches({
   theme: {
+    media: {
+      bp3: "(max-width: 1365px)",
+    },
+
     colors: {
       white: "#fff",
       gray900: "#121214",
