@@ -19,6 +19,11 @@ export const globalStyles = globalCss({
 
   button: {
     cursor: "pointer",
+    border: 0,
+  },
+
+  li: {
+    listStyle: "none",
   },
 
   a: {

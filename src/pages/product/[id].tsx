@@ -10,6 +10,7 @@ import { getAllProductsStripe } from "../../hooks/get-all-products";
 
 import { ProductCardSkeleton } from "../../components/ProductCardSkeleton";
 import * as S from "../../styles/pages/product";
+import { useCart } from "../../context/Cart";
 
 interface Product {
   id: string;
@@ -28,10 +29,16 @@ export default function Product({ product }: ProductProps) {
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
     useState(false);
 
+  const { addProduct } = useCart();
+
   const { isFallback } = useRouter();
 
   if (isFallback) {
     return <ProductCardSkeleton />;
+  }
+
+  async function handleAddProductToCart() {
+    await addProduct(product);
   }
 
   async function handleBuyProduct() {
@@ -69,10 +76,10 @@ export default function Product({ product }: ProductProps) {
           <p>{product.description}</p>
 
           <button
-            onClick={handleBuyProduct}
+            onClick={handleAddProductToCart}
             disabled={isCreatingCheckoutSession}
           >
-            Comprar agora
+            Colocar na sacola
           </button>
         </S.ProductDetails>
       </S.ProductContainer>

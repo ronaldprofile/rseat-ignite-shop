@@ -8,6 +8,7 @@ import { CaretLeft, CaretRight, Handbag } from "phosphor-react";
 import { getAllProductsStripe } from "../hooks/get-all-products";
 import "keen-slider/keen-slider.min.css";
 import * as S from "../styles/pages/home";
+import { useCart } from "../context/Cart";
 
 interface HomeProps {
   products: Array<{
@@ -21,6 +22,8 @@ interface HomeProps {
 export default function Home({ products }: HomeProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
+
+  // const { addProduct } = useCart();
 
   const [sliderRef, instanceRef] = useKeenSlider({
     initial: 0,
