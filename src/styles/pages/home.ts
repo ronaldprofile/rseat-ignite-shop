@@ -1,15 +1,38 @@
 import { styled } from "..";
 
 export const HomePageContainer = styled("div", {
-  minHeight: 620,
-  display: "flex",
   width: "100%",
-  maxWidth: "calc(100vw - ((100vw - 1180px) / 2))",
-  marginLeft: "auto",
+  minHeight: 620,
+  padding: 24,
+  display: "flex",
+
+  "@media (min-width: 1024px)": {
+    maxWidth: "calc(100vw - ((100vw - 1180px) / 2))",
+    marginLeft: "auto",
+  },
+});
+
+export const KeenSlider = styled("div", {
+  display: "none !important",
+
+  "@media (min-width: 500px)": {
+    display: "flex !important",
+  },
+});
+
+export const ProductsContainer = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  flexWrap: "wrap",
+  gap: 48,
+
+  "@media (min-width: 500px)": {
+    display: "none",
+  },
 });
 
 export const Product = styled("a", {
-  minWidth: 696,
+  height: 320,
   position: "relative",
   display: "flex",
   alignItems: "center",
@@ -53,6 +76,11 @@ export const Product = styled("a", {
         color: "$green300",
       },
     },
+  },
+
+  "@media (min-width: 640px)": {
+    minWidth: 696,
+    height: "auto",
   },
 });
 

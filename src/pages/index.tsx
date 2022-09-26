@@ -40,7 +40,7 @@ export default function Home({ products }: HomeProps) {
     },
 
     breakpoints: {
-      "(max-width: 425px)": {
+      "(min-width: 500px) and (max-width: 600px)": {
         slides: {
           perView: 1,
         },
@@ -68,52 +68,87 @@ export default function Home({ products }: HomeProps) {
         />
       </Head>
 
-      <S.HomePageContainer ref={sliderRef} className="keen-slider">
-        {products.map((product) => {
-          return (
-            <Link
-              href={`/product/${product.id}`}
-              key={product.id}
-              prefetch={false}
-            >
-              <S.Product key={product.id} className="keen-slider__slide">
-                <Image src={product.imageUrl} alt="" width={520} height={400} />
-
-                <footer>
-                  <div>
-                    <strong>{product.name}</strong>
-                    <span>{product.price}</span>
-                  </div>
-                </footer>
-              </S.Product>
-            </Link>
-          );
-        })}
-
-        <S.Glass position="right-position">
-          <S.SlidesControl>
-            {loaded && instanceRef.current && (
-              <S.ButtonControl
-                onClick={nextSlide}
-                disabled={currentSlide === 2}
+      <S.HomePageContainer>
+        <S.KeenSlider ref={sliderRef} className="keen-slider">
+          {products.map((product) => {
+            return (
+              <Link
+                href={`/product/${product.id}`}
+                key={product.id}
+                prefetch={false}
               >
-                <CaretRight color="#c4c4cc" />
-              </S.ButtonControl>
-            )}
-          </S.SlidesControl>
-        </S.Glass>
+                <S.Product key={product.id} className="keen-slider__slide">
+                  <Image
+                    src={product.imageUrl}
+                    alt=""
+                    width={520}
+                    height={400}
+                  />
 
-        {currentSlide !== 0 && (
-          <S.Glass position="left-position">
+                  <footer>
+                    <div>
+                      <strong>{product.name}</strong>
+                      <span>{product.price}</span>
+                    </div>
+                  </footer>
+                </S.Product>
+              </Link>
+            );
+          })}
+
+          <S.Glass position="right-position">
             <S.SlidesControl>
               {loaded && instanceRef.current && (
-                <S.ButtonControl onClick={prevSlide}>
-                  <CaretLeft color="#c4c4cc" />
+                <S.ButtonControl
+                  onClick={nextSlide}
+                  disabled={currentSlide === 2}
+                >
+                  <CaretRight color="#c4c4cc" />
                 </S.ButtonControl>
               )}
             </S.SlidesControl>
           </S.Glass>
-        )}
+
+          {currentSlide !== 0 && (
+            <S.Glass position="left-position">
+              <S.SlidesControl>
+                {loaded && instanceRef.current && (
+                  <S.ButtonControl onClick={prevSlide}>
+                    <CaretLeft color="#c4c4cc" />
+                  </S.ButtonControl>
+                )}
+              </S.SlidesControl>
+            </S.Glass>
+          )}
+        </S.KeenSlider>
+
+        <S.ProductsContainer>
+          {products.map((product) => {
+            return (
+              <Link
+                href={`/product/${product.id}`}
+                key={product.id}
+                prefetch={false}
+              >
+                <S.Product key={product.id}>
+                  <Image
+                    src={product.imageUrl}
+                    alt=""
+                    width={520}
+                    height={400}
+                  />
+
+                  <footer>
+                    <div>
+                      <strong>{product.name}</strong>
+                      <span>{product.price}</span>
+                    </div>
+                  </footer>
+                </S.Product>
+              </Link>
+            );
+          })}
+        </S.ProductsContainer>
       </S.HomePageContainer>
     </>
   );
