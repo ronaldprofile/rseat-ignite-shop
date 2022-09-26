@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useKeenSlider } from "keen-slider/react";
 import { GetStaticProps } from "next";
-import { CaretLeft, CaretRight } from "phosphor-react";
+import { CaretLeft, CaretRight, Handbag } from "phosphor-react";
 import { getAllProductsStripe } from "../hooks/get-all-products";
 import "keen-slider/keen-slider.min.css";
 import * as S from "../styles/pages/home";
@@ -90,13 +90,17 @@ export default function Home({ products }: HomeProps) {
                       <strong>{product.name}</strong>
                       <span>{product.price}</span>
                     </div>
+
+                    <button>
+                      <Handbag size={32} color="#fff" weight="bold" />
+                    </button>
                   </footer>
                 </S.Product>
               </Link>
             );
           })}
 
-          <S.Glass position="right-position">
+          <S.Glass position="right-position" hide={currentSlide === 2}>
             <S.SlidesControl>
               {loaded && instanceRef.current && (
                 <S.ButtonControl

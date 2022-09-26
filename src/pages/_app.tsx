@@ -5,6 +5,7 @@ import { SkeletonTheme } from "react-loading-skeleton";
 
 import { globalStyles } from "../styles/global";
 import logoIgniteShop from "../assets/logo.svg";
+import { Handbag } from "phosphor-react";
 import * as S from "../styles/pages/app";
 
 globalStyles();
@@ -22,6 +23,10 @@ function MyApp({ Component, pageProps }: AppProps) {
             height={logoIgniteShop.height}
           />
         </Link>
+
+        <S.ButtonProductsBag>
+          <Handbag size={32} color="#8D8D99" weight="bold" />
+        </S.ButtonProductsBag>
       </S.Header>
 
       <SkeletonTheme baseColor="#202024" highlightColor="#121214">

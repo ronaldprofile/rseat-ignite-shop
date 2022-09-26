@@ -76,6 +76,24 @@ export const Product = styled("a", {
         color: "$green300",
       },
     },
+
+    button: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+
+      padding: "0.75rem",
+      width: 48,
+      height: 48,
+      borderRadius: 6,
+      background: "#00875F",
+      border: 0,
+      transition: "filter .2s",
+
+      "&:hover": {
+        filter: "brightness(0.9)",
+      },
+    },
   },
 
   "@media (min-width: 640px)": {
@@ -94,6 +112,11 @@ export const Glass = styled("div", {
     "linear-gradient(90deg, rgba(18, 18, 20, 0) 0%, rgba(18, 18, 20, 0.75) 100%)",
 
   variants: {
+    hide: {
+      true: {
+        display: "none",
+      },
+    },
     position: {
       "right-position": {
         right: 0,
