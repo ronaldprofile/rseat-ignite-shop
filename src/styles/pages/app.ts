@@ -9,13 +9,16 @@ export const Container = styled("div", {
 });
 
 export const Header = styled("header", {
-  padding: "2rem 0",
+  padding: "2rem 1.5rem",
   width: "100%",
-  maxWidth: 1100,
   margin: "0 auto",
 
-
   img: {
-    cursor: "pointer"
-  }
+    cursor: "pointer",
+  },
+
+  "@media (min-width: 1024px)": {
+    maxWidth: 1100,
+    paddingInline: 0,
+  },
 });
