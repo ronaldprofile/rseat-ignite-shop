@@ -8,7 +8,7 @@ Ignite shop é um e-commerce de camisetas, foi desenvolvida usando Next JS junta
 
 ## Next Level
 
-- Responsividade (Coming soon)
+- Responsividade (done)
 - Cart Hook (Coming soon)
 
 ## Conteúdo abordado
