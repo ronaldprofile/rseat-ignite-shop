@@ -13,10 +13,10 @@ interface Product {
 
 interface SuccessProps {
   customerName: string;
-  product: Product;
+  products: Product[];
 }
 
-export default function Success({ customerName, product }: SuccessProps) {
+export default function Success({ customerName, products }: SuccessProps) {
   return (
     <>
       <Head>
@@ -25,15 +25,21 @@ export default function Success({ customerName, product }: SuccessProps) {
       </Head>
 
       <S.SuccessContainer>
+        <S.ProductImageContainer>
+          {products.map((product) => {
+            return (
+              <S.ImageContainer key={product.imageUrl}>
+                <Image src={product.imageUrl} width={140} height={140} alt="" />
+              </S.ImageContainer>
+            );
+          })}
+        </S.ProductImageContainer>
+        
         <h1>Compra efetuada</h1>
 
-        <S.ImageContainer>
-          <Image src={product.imageUrl} width={120} height={110} alt="" />
-        </S.ImageContainer>
-
         <p>
-          Uhuuu! <strong>{customerName}</strong>, sua{" "}
-          <strong>{product.name}</strong> já está a caminho da sua casa.
+          Uhuuu! <strong>{customerName}</strong>, suas compras já está a caminho
+          da sua casa.
         </p>
 
         <Link href="/">Voltar ao catálogo</Link>
@@ -59,15 +65,22 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   });
 
   const customerName = session.customer_details?.name;
-  const product = session.line_items?.data[0].price?.product as Stripe.Product;
+
+  const products = session.line_items?.data.map((product) => {
+    const productData =  product.price?.product as Stripe.Product;
+
+    return {
+      name: productData.name,
+      imageUrl: productData.images[0]
+    }
+  });
+
+  console.log(products);
 
   return {
     props: {
       customerName,
-      product: {
-        name: product.name,
-        imageUrl: product.images[0],
-      },
+      products,
     },
   };
 };

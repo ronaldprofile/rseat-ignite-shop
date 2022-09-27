@@ -7,6 +7,7 @@ export const SidebarContainer = styled("div", {
   top: 0,
   bottom: 0,
   zIndex: 2000,
+  overflowY: 'scroll',
 
   background: "#202024",
   boxShadow: "-4px 0px 30px rgba(0, 0, 0, 0.8)",
@@ -27,7 +28,7 @@ export const SidebarWrapper = styled("div", {
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
-  
+
   footer: {
     marginTop: 100,
 
@@ -80,6 +81,7 @@ export const ImageProductContainer = styled("div", {
   maxWidth: 100,
   height: 93,
   padding: "0.25rem",
+  position: "relative",
   background: "linear-gradient(180deg, #1EA483 0%, #7465D4 100%)",
   borderRadius: 8,
 
@@ -93,6 +95,7 @@ export const ImageProductContainer = styled("div", {
 });
 
 export const ProductItemInfo = styled("div", {
+  width: "100%",
   display: "flex",
   flexDirection: "column",
   gap: "8px",
@@ -122,4 +125,44 @@ export const ProductItemInfo = styled("div", {
       filter: "brightness(0.8)",
     },
   },
+});
+
+export const ButtonCompleteOrder = styled("button", {
+  width: "100%",
+  marginTop: "2rem",
+  padding: "1rem",
+  fontSize: "$md",
+  fontWeight: "bold",
+  color: "$white",
+  background: "$green500",
+  border: 0,
+  borderRadius: 4,
+  transition: "background .2s",
+
+  "&:disabled": {
+    cursor: "not-allowed",
+    opacity: 0.6,
+  },
+
+  "&:not(:disabled):hover": {
+    background: "$green300",
+  },
+});
+
+export const ProductsQuantity = styled("div", {
+  height: 24,
+  width: 24,
+  position: "absolute",
+  right: "-7px",
+  top: "-7px",
+
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  background: "#00875F",
+  color: "#fff",
+  fontSize: "0.875rem",
+  fontWeight: "bold",
+  borderRadius: 9990,
+  border: "3px solid #121214",
 });

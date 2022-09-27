@@ -1,24 +1,24 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
-import axios from "axios";
 
+import { useCart } from "../../context/Cart";
 import { getProductByIdStripe } from "../../hooks/get-product-by-id";
 import { getAllProductsStripe } from "../../hooks/get-all-products";
-
 import { ProductCardSkeleton } from "../../components/ProductCardSkeleton";
+import { formatPrice } from "../../utils/formatPrice";
+
 import * as S from "../../styles/pages/product";
-import { useCart } from "../../context/Cart";
 
 interface Product {
   id: string;
   name: string;
   description: string;
-  price: string;
+  price: number;
   defaultPriceId: string;
   imageUrl: string;
+  quantity: number;
 }
 
 interface ProductProps {
@@ -26,9 +26,6 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
-    useState(false);
-
   const { addProduct } = useCart();
 
   const { isFallback } = useRouter();
@@ -38,24 +35,12 @@ export default function Product({ product }: ProductProps) {
   }
 
   async function handleAddProductToCart() {
-    await addProduct(product);
-  }
+    const newProduct = {
+      ...product,
+      quantity: 1,
+    };
 
-  async function handleBuyProduct() {
-    try {
-      setIsCreatingCheckoutSession(true);
-
-      const response = await axios.post("/api/checkout", {
-        priceId: product.defaultPriceId,
-      });
-
-      const { checkoutUrl } = response.data;
-
-      window.location.href = checkoutUrl;
-    } catch (error) {
-      setIsCreatingCheckoutSession(false);
-      alert("Falha ao redirecionar ao checkout");
-    }
+    await addProduct(newProduct);
   }
 
   return (
@@ -72,15 +57,10 @@ export default function Product({ product }: ProductProps) {
         <S.ProductDetails>
           <h1>{product.name}</h1>
 
-          <span>{product.price}</span>
+          <span>{formatPrice(product.price)}</span>
           <p>{product.description}</p>
 
-          <button
-            onClick={handleAddProductToCart}
-            disabled={isCreatingCheckoutSession}
-          >
-            Colocar na sacola
-          </button>
+          <button onClick={handleAddProductToCart}>Colocar na sacola</button>
         </S.ProductDetails>
       </S.ProductContainer>
     </>

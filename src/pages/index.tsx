@@ -6,15 +6,16 @@ import { useKeenSlider } from "keen-slider/react";
 import { GetStaticProps } from "next";
 import { CaretLeft, CaretRight, Handbag } from "phosphor-react";
 import { getAllProductsStripe } from "../hooks/get-all-products";
+import { formatPrice } from "../utils/formatPrice";
+
 import "keen-slider/keen-slider.min.css";
 import * as S from "../styles/pages/home";
-import { useCart } from "../context/Cart";
 
 interface HomeProps {
   products: Array<{
     id: string;
     name: string;
-    price: string;
+    price: number;
     imageUrl: string;
   }>;
 }
@@ -22,8 +23,6 @@ interface HomeProps {
 export default function Home({ products }: HomeProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
-
-  // const { addProduct } = useCart();
 
   const [sliderRef, instanceRef] = useKeenSlider({
     initial: 0,
@@ -91,7 +90,7 @@ export default function Home({ products }: HomeProps) {
                   <footer>
                     <div>
                       <strong>{product.name}</strong>
-                      <span>{product.price}</span>
+                      <span>{formatPrice(product.price)}</span>
                     </div>
 
                     <button>

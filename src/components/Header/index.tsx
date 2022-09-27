@@ -9,9 +9,13 @@ import * as S from "./styles";
 import { useCart } from "../../context/Cart";
 import { SidebarCart } from "../SidebarCart";
 
-export function Header() {
+interface HeaderProps {
+  showButtonBag?: boolean;
+}
+
+export function Header({ showButtonBag = true}: HeaderProps) {
   const [sidebarCartIsOpen, setSidebarCartIsOpen] = useState(false);
-  const { cart } = useCart();
+  const { cartProductsItemsQuantity } = useCart();
 
   const handleOpenSidebarCart = () => setSidebarCartIsOpen(true);
 
@@ -29,13 +33,17 @@ export function Header() {
           />
         </Link>
 
-        <S.ButtonProductsBag onClick={handleOpenSidebarCart}>
-          <Handbag size={32} color="#8D8D99" weight="bold" />
+        {showButtonBag && (
+          <S.ButtonProductsBag onClick={handleOpenSidebarCart}>
+            <Handbag size={32} color="#8D8D99" weight="bold" />
 
-          {cart.length !== 0 && (
-            <S.ProductsQuantity>{cart.length}</S.ProductsQuantity>
-          )}
-        </S.ButtonProductsBag>
+            {cartProductsItemsQuantity !== 0 && (
+              <S.ProductsQuantity>
+                {cartProductsItemsQuantity}
+              </S.ProductsQuantity>
+            )}
+          </S.ButtonProductsBag>
+        )}
       </S.Header>
 
       {sidebarCartIsOpen && (

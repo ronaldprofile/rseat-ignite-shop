@@ -1,18 +1,25 @@
+import axios from "axios";
 import { createContext, ReactNode, useContext, useState } from "react";
+import { formatPrice } from "../../utils/formatPrice";
+import { produce } from "immer";
 
 interface Product {
   id: string;
   name: string;
   description: string;
-  price: string;
+  price: number;
   imageUrl: string;
-  quantity?: number;
+  quantity: number;
+  defaultPriceId?: string;
 }
 
 interface CartContextProps {
   cart: Product[];
+  cartProductsItemsTotal: number;
+  cartProductsItemsQuantity: number;
   addProduct: (product: Product) => Promise<void>;
   removeProduct: (productId: string) => void;
+  buyProduct: () => Promise<void>;
 }
 
 interface CartProvider {
@@ -24,52 +31,70 @@ const CartContext = createContext({} as CartContextProps);
 export function CartProvider({ children }: CartProvider) {
   const [cart, setCart] = useState<Product[]>([]);
 
-  async function addProduct(product: Product) {
-    const cartCopy = [...cart];
+  const cartProductsItemsQuantity = cart.length;
 
-    const productExistsInCart = cartCopy.find((productItem) => {
-      productItem.id === product.id;
+  const cartProductsItemsTotal = cart.reduce((sumTotal, product) => {
+    return sumTotal + product.price * product.quantity;
+  }, 0);
+
+  async function addProduct(product: Product) {
+    const alreadyProductExistsInCart = cart.findIndex(
+      (productItem) => productItem.id === product.id
+    );
+
+    const newCart = produce(cart, (draft) => {
+      if (alreadyProductExistsInCart < 0) {
+        draft.push(product);
+      } else {
+        draft[alreadyProductExistsInCart].quantity += product.quantity;
+      }
     });
 
-    const currentQuantityProduct = productExistsInCart
-      ? productExistsInCart.quantity
-      : 0;
-
-    const quantity = currentQuantityProduct! + 1;
-
-    if (productExistsInCart) {
-      productExistsInCart.quantity = quantity;
-    } else {
-      const newProduct = {
-        ...product,
-        quantity: 1,
-      };
-
-      cartCopy.push(newProduct);
-    }
-
-    setCart(cartCopy);
+    setCart(newCart);
   }
 
   async function removeProduct(productId: string) {
-    const cartCopy = [...cart];
+    const newCart = produce(cart, (draft) => {
+      const alreadyProductExistsInCart = cart.findIndex(
+        (productItem) => productItem.id === productId
+      );
 
-    const productIndex = cartCopy.findIndex(
-      (product) => product.id === productId
-    );
+      if (alreadyProductExistsInCart >= 0) {
+        draft.splice(alreadyProductExistsInCart, 1);
+      }
+    });
 
-    if (productIndex >= 0) {
-      cartCopy.splice(productIndex, 1);
-      setCart(cartCopy);
+    setCart(newCart);
+  }
+
+  async function buyProduct() {
+    const products = cart.map((product) => ({
+      price: product.defaultPriceId,
+      quantity: product.quantity,
+    }));
+
+    try {
+      const response = await axios.post("/api/checkout", {
+        products
+      });
+      const { checkoutUrl } = response.data;
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      console.log(error);
+      
+      alert("Falha ao redirecionar ao checkout");
     }
   }
 
   return (
     <CartContext.Provider
       value={{
+        cart,
         addProduct,
         removeProduct,
-        cart,
+        buyProduct,
+        cartProductsItemsTotal,
+        cartProductsItemsQuantity,
       }}
     >
       {children}

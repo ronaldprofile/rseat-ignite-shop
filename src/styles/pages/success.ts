@@ -37,14 +37,30 @@ export const SuccessContainer = styled("main", {
   },
 });
 
+export const ProductImageContainer = styled("div", {
+  display: "flex",
+  minWidth: 300,
+  marginBottom: 48,
+
+  "& > div": {
+    position: "relative",
+  },
+
+  "& div ~ div": {
+    position: "absolute",
+    zIndex: 100,
+
+    marginLeft: 125,
+  },
+});
+
 export const ImageContainer = styled("div", {
   width: "100%",
-  maxWidth: 130,
-  height: 145,
-  marginTop: "4rem",
-  padding: "0.25rem",
+  maxWidth: 200,
+  height: 200,
   background: "linear-gradient(180deg, #1EA483 0%, #7465D4 100%)",
-  borderRadius: 8,
+  borderRadius: "100%",
+  boxShadow: "0px 0px 60px rgba(0, 0, 0, 0.8)",
 
   display: "flex",
   justifyContent: "center",

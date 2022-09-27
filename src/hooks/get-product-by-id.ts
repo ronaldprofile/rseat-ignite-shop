@@ -15,10 +15,7 @@ export async function getProductByIdStripe(productId: string) {
       description: product.description,
       imageUrl: product.images[0],
       defaultPriceId: price.id,
-      price: new Intl.NumberFormat("pt-br", {
-        style: "currency",
-        currency: "BRL",
-      }).format(price.unit_amount! / 100),
+      price: price.unit_amount! / 100,
     },
   };
 }

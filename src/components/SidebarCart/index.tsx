@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { X } from "phosphor-react";
+import { useState } from "react";
 import { useCart } from "../../context/Cart";
+import { formatPrice } from "../../utils/formatPrice";
 
 import * as S from "./styles";
 
@@ -9,10 +11,25 @@ interface SidebarCartProps {
 }
 
 export function SidebarCart({ onCloseSidebar }: SidebarCartProps) {
-  const { cart, removeProduct } = useCart();
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false);
+
+  const {
+    cart,
+    buyProduct,
+    removeProduct,
+    cartProductsItemsTotal,
+    cartProductsItemsQuantity,
+  } = useCart();
 
   function handleRemoveProductCart(productId: string) {
     removeProduct(productId);
+  }
+
+  async function handleBuyProduct() {
+    setIsCreatingCheckoutSession(true);
+    await buyProduct();
+    setIsCreatingCheckoutSession(false);
   }
 
   return (
@@ -39,11 +56,13 @@ export function SidebarCart({ onCloseSidebar }: SidebarCartProps) {
                       height={93}
                       alt=""
                     />
+
+                    <S.ProductsQuantity>{product.quantity}</S.ProductsQuantity>
                   </S.ImageProductContainer>
 
                   <S.ProductItemInfo>
-                    <span>Camiseta Beyond the Limits</span>
-                    <strong>R$ 79,90</strong>
+                    <span>{product.name}</span>
+                    <strong>{formatPrice(product.price)}</strong>
 
                     <button onClick={() => handleRemoveProductCart(product.id)}>
                       Remover
@@ -57,13 +76,20 @@ export function SidebarCart({ onCloseSidebar }: SidebarCartProps) {
           <footer>
             <div>
               <span>Quantidade</span>
-              <span>{cart.length} itens</span>
+              <span>{cartProductsItemsQuantity} itens</span>
             </div>
 
             <div>
               <span>Valor total</span>
-              <strong>R$ 270,00</strong>
+              <strong>{formatPrice(cartProductsItemsTotal)}</strong>
             </div>
+
+            <S.ButtonCompleteOrder
+              onClick={handleBuyProduct}
+              disabled={isCreatingCheckoutSession || cartProductsItemsQuantity <= 0}
+            >
+              Finalizar compra
+            </S.ButtonCompleteOrder>
           </footer>
         </div>
       </S.SidebarWrapper>
