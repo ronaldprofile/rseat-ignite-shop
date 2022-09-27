@@ -1,6 +1,13 @@
 import axios from "axios";
-import { createContext, ReactNode, useContext, useState } from "react";
-import { formatPrice } from "../../utils/formatPrice";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
 import { produce } from "immer";
 
 interface Product {
@@ -12,7 +19,6 @@ interface Product {
   quantity: number;
   defaultPriceId?: string;
 }
-
 interface CartContextProps {
   cart: Product[];
   cartProductsItemsTotal: number;
@@ -30,6 +36,16 @@ const CartContext = createContext({} as CartContextProps);
 
 export function CartProvider({ children }: CartProvider) {
   const [cart, setCart] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const storageCart = JSON.parse(localStorage.getItem("@ignite-shop:cart")!);
+
+    if (storageCart) setCart(storageCart);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("@ignite-shop:cart", JSON.stringify(cart));
+  }, [cart]);
 
   const cartProductsItemsQuantity = cart.length;
 
@@ -75,13 +91,13 @@ export function CartProvider({ children }: CartProvider) {
 
     try {
       const response = await axios.post("/api/checkout", {
-        products
+        products,
       });
       const { checkoutUrl } = response.data;
       window.location.href = checkoutUrl;
     } catch (error) {
       console.log(error);
-      
+
       alert("Falha ao redirecionar ao checkout");
     }
   }

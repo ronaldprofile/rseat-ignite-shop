@@ -9,6 +9,14 @@ export const SidebarContainer = styled("div", {
   zIndex: 2000,
   overflowY: 'scroll',
 
+  "&::-webkit-scrollbar": {
+    width: 4
+  },
+
+  "&::-webkit-scrollbar-thumb": {
+    background: "$gray80"
+  },
+
   background: "#202024",
   boxShadow: "-4px 0px 30px rgba(0, 0, 0, 0.8)",
 });
